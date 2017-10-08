@@ -85,6 +85,10 @@ h1 {
   padding-top: 1em; }
   .board h1 {
     margin-top: 0.3em; }
+  .board .playerName {
+    display: block;
+    color: white;
+  }
 
 .players {
   color: rgba(0, 0, 0, 0.2);
@@ -131,6 +135,12 @@ h1 {
     background-position: center center;}
     .boxes .box:nth-child(3n) {
       margin-right: 0; }
+    .boxes .box-hover-1 {
+      background-color: #A3A3A3;
+      background-image: url(../img/o.svg); }
+    .boxes .box-hover-2 {
+      background-color: #A3A3A3;
+      background-image: url(../img/x.svg); }
     .boxes .box-filled-1 {
       background-color: #FFA000;
       background-image: url(../img/o.svg); }
@@ -139,3 +149,30 @@ h1 {
       background-image: url(../img/x.svg); }
 
 
+.player-setup {
+  float: left;
+  width: 50%;
+  margin-top: 1em;
+}
+
+.player-setup h2 {
+  color: white;
+}
+
+.player-setup ul {
+  margin: 0 auto;
+}
+
+.player-select {
+  float: left;
+  width: 40%;
+  color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  /* padding: 1.25em 0 1em; */
+  outline: 1px solid #ccc;
+  transition: 1s; 
+}
+
+input[type="text"]:disabled {
+  background: #dddddd;
+}
