@@ -15,6 +15,8 @@ const $winningLines = [
 ];
 
 let $gameBoard = [];
+let $scores = [];
+let $moves = [];
 
 $("#start #startButton").on('click', function(e){
     $("#board").show();
@@ -114,7 +116,12 @@ $box.on('click',function(){
             $("#finish").show();
         } else {
             $changePlayer();
-            $minMax($gameBoard,$playerTurn);
+            $scores = [];
+            $moves = [];
+            const $botMove = $minMax($gameBoard,$playerTurn);
+            $(".box").eq($botMove).addClass( "box-filled-" + $playerTurn);
+            $gameBoard[$botMove] = $playerTurn;
+            $changePlayer();
         }
     }
 });
@@ -138,14 +145,8 @@ const $checkWinner = (board, player) => {
         let r2 = element[1];
         let r3 = element[2];
 
-        console.log(player);
-        console.log(r1 + " " + " " + r2 + " " + r3);
-        console.log(board[r1]);
-        console.log(board[r2]);
-        console.log(board[r3]);
-
         if (board[r1] === player && board[r2] === player && board[r3] === player) {
-            console.log("winner");
+            // console.log("winner");
             return "win";
         }
     }
@@ -166,9 +167,9 @@ const $boardSize = (board) => {
 const $score = (board,player,depth) => {
     const $otherPlayer = player === 1 ? 2 : 1; 
     if ($checkWinner(board,player) == "win") {
-        return 10 - depth;
+        return 10;
     } else if ($checkWinner(board,$otherPlayer) == "win") {
-        return depth -10;
+        return -10;
     } else
     {
         return 0;
@@ -176,6 +177,16 @@ const $score = (board,player,depth) => {
 }
 
 const $minMax = (board, player, depth) => {
+    if($boardSize(board) < 3)
+    {
+        let $randMove = Math.floor((Math.random() * 8));
+        if (typeof board[$randMove] === "undefined") {
+            return $randMove;
+        }
+        else {
+            $minMax(board,player);
+        }
+    }
     if($boardSize(board) == 9){
         return $score(board,player);
     }
@@ -185,16 +196,16 @@ const $minMax = (board, player, depth) => {
         depth += 1;
     }
     const $otherPlayer = player === 1 ? 2 : 1; 
-   
-    let $scores = [];
-    let $moves = [];
+    console.log($otherPlayer);
     let $turn = player === 1 ? 1 : 2;
+    console.log($turn);
+    let $maxScore = -Infinity;
 
     for (let i = 0; i < 9; i++) {
         if (typeof board[i] === "undefined") {
             const $newBoard = board.slice();
             $newBoard[i] = $turn;
-            
+            $printBoard($newBoard);
             $scores.push($score($newBoard,$turn,depth));
             $minMax($newBoard,$otherPlayer,depth);
             $moves.push(i);
@@ -202,6 +213,25 @@ const $minMax = (board, player, depth) => {
     }
 
     if (depth === 0) {
-        console.log("here");
+        // let $max = $scores;
+        // $max = $max.sort(function(a, b){return b-a})[0];
+        console.log($moves[$scores.indexOf($max)]);
+        return $moves[$scores.indexOf($max)];
     }
+}
+
+const $printBoard = (board) => {
+    let $boardPrint
+    $boardPrint += "\n";
+    for (let i = 0; i < 9; i++) {
+        if (typeof board[i] != "undefined") {
+            $boardPrint += board[i];
+        } else {
+            $boardPrint += "-";
+        }
+        if (i % 3 == 2 ) {
+            $boardPrint += "\n";
+        }
+    }
+    console.log($boardPrint);
 }
