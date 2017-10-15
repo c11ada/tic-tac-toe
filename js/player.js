@@ -1,6 +1,9 @@
 function Player(name,number) {
     this.name = name;
-    this.numer = number;
+    this.number = number;
 
     this.isTurn = false;
 }
+
+
+
