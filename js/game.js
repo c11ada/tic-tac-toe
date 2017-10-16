@@ -16,6 +16,9 @@ function Game() {
   this.moves = [];
 }
 
+// 
+// helper function to print board in a 3 X 3 box on console
+// 
 Game.prototype.printBoard = function(board) {
   let boardPrint;
   boardPrint += "\n";
@@ -32,6 +35,9 @@ Game.prototype.printBoard = function(board) {
   console.log(boardPrint);
 };
 
+// 
+// funtion to set AI and handle UI 
+// 
 Game.prototype.setAi = function() {
   if (this.ai == false) {
     $("#player2Input").attr("placeholder", "AI");
@@ -44,19 +50,27 @@ Game.prototype.setAi = function() {
   }
 };
 
+// 
+// funtion to hanlde box hover
+// 
 Game.prototype.boxHover = function(boxHovered) {
   let isFilled;
+  // if the box has any of the css classes it is occupied -> dont do anything
   if (
     boxHovered.hasClass("box-filled-1") == true ||
     boxHovered.hasClass("box-filled-2") == true
   ) {
     isFilled = true;
   }
+  // if its not filled show the hover for the correct player
   if (!isFilled) {
     boxHovered.toggleClass("box-hover-" + this.playerTurn);
   }
 };
 
+// 
+// reset game variables
+// 
 Game.prototype.reset = function() {
   this.playerTurn = 1;
   this.ai = false;
@@ -64,24 +78,37 @@ Game.prototype.reset = function() {
   this.board = [];
 };
 
+// 
+// function to handle box click -> fills box with correct player 
+// 
 Game.prototype.boxFill = function(boxArray, boxClicked) {
   let isFilled;
+  // find out the box index
   const boxIndex = boxArray.index(boxClicked);
 
+  // check to see if box is occupied
   if (
     boxClicked.hasClass("box-filled-1") == true ||
     boxClicked.hasClass("box-filled-2") == true
   ) {
     isFilled = true;
   }
+  // if not occupied
   if (!isFilled) {
+    // add correct class
     boxClicked.addClass("box-filled-" + this.playerTurn);
+    // remove hover class
     boxClicked.removeClass("box-hover-" + this.playerTurn);
+    // make sure to add the index in the board 
     this.board[boxIndex] = this.playerTurn;
+    // check to see if the game is won 
     return (status = this.checkWinner(this.board, this.playerTurn));
   }
 };
 
+// 
+// handle change player
+// 
 Game.prototype.changePlayer = function() {
   if (this.playerTurn == 1) {
     this.playerTurn = 2;
@@ -94,6 +121,9 @@ Game.prototype.changePlayer = function() {
   }
 };
 
+// 
+// helper function to check if a player has won the game
+// 
 Game.prototype.checkWinner = function(board, player) {
   for (let index = 0; index < this.winningLines.length; index++) {
     let element = this.winningLines[index];
@@ -114,6 +144,9 @@ Game.prototype.checkWinner = function(board, player) {
   }
 };
 
+// 
+// helper function to display finish screen
+// 
 Game.prototype.showFinalScreen = function(finishClass, player) {
   $("#board").hide();
   $("#finish").addClass(finishClass);
@@ -127,12 +160,21 @@ Game.prototype.showFinalScreen = function(finishClass, player) {
   $("#finish").show();
 };
 
+// 
+// helper funtion to check if the board is full or not
+// 
 Game.prototype.boardSize = function(board) {
   return board.filter(function(box) {
     return box !== null;
   }).length;
 };
 
+// 
+// min max scor calculator
+// if player wins 10 points
+// if other player wins -10 points
+// else 0 points
+// 
 Game.prototype.score = function(board, player, depth) {
   const otherPlayer = player === 1 ? 2 : 1;
   if (this.checkWinner(board, player) == "win") {
@@ -144,18 +186,27 @@ Game.prototype.score = function(board, player, depth) {
   }
 };
 
+// 
+// minmax function to emulate AI moves
+// recursivly tries every move from a given point 
+// to figure out which move will give it best score
+// 
 Game.prototype.minMax = function(board, player, depth) {
-  // if(this.boardSize(board) < 3)
-  // {
-  //     let randMove = Math.floor((Math.random() * 8));
-  //     if (typeof board[randMove] === "undefined") {
-  //         return randMove;
-  //     }
-  //     else {
-  //         this.minMax(board,player);
-  //     }
-  // }
+  // work around as the first few goes take to long to compute
+  // just put at a random square
+  if(this.boardSize(board) < 3)
+  {
+      let randMove = Math.floor((Math.random() * 8));
+      if (typeof board[randMove] === "undefined") {
+          return randMove;
+      }
+      else {
+          this.minMax(board,player);
+      }
+  }
+
   const otherPlayer = player === 1 ? 2 : 1;
+
   if (this.checkWinner(board, otherPlayer) === "win") {
     return -10;
   }
@@ -168,14 +219,17 @@ Game.prototype.minMax = function(board, player, depth) {
     depth += 1;
   }
 
-  console.log(otherPlayer);
+  // console.log(otherPlayer);
   let turn = player === 1 ? 1 : 2;
-  console.log(turn);
+  // console.log(turn);
   let maxScore = -Infinity;
   let index = 0;
 
+  // go through each item on the board
   for (let i = 0; i < 9; i++) {
+    // check to see if the box is not used
     if (typeof board[i] === "undefined") {
+      // create a test board
       const newBoard = board.slice();
       newBoard[i] = turn;
       this.printBoard(newBoard);
@@ -185,6 +239,7 @@ Game.prototype.minMax = function(board, player, depth) {
         maxScore = moveScore;
         index = i;
       }
+      // call the min max function again with a new test board
       this.minMax(newBoard, otherPlayer, depth);
     }
   }
