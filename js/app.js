@@ -55,8 +55,8 @@
     $("#newGameButton").on('click', function(e){
         // hide everything and show start screen
         $("#finish").hide();
-        $("#board").hide();
-        $("#start").show();
+        $("#board").show();
+        $("#start").hide();
         // clear board by removing css classes
         $(".box").removeClass( "box-filled-1");
         $(".box").removeClass( "box-filled-2");
@@ -70,7 +70,7 @@
         $("#finish").removeClass("screen-win-tie");
         
         game.reset();
-        game.setAi();
+        // game.setAi();
     });
 
     const $box = $(".box");

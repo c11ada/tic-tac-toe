@@ -73,8 +73,8 @@ Game.prototype.boxHover = function(boxHovered) {
 // 
 Game.prototype.reset = function() {
   this.playerTurn = 1;
-  this.ai = false;
-  this.setAi();
+  // this.ai = false;
+  // this.setAi();
   this.board = [];
 };
 
