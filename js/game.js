@@ -82,19 +82,19 @@ Game.prototype.reset = function() {
 // function to handle box click -> fills box with correct player 
 // 
 Game.prototype.boxFill = function(boxArray, boxClicked) {
-  let isFilled;
-  // find out the box index
+  // let isFilled;
+  // // find out the box index
   const boxIndex = boxArray.index(boxClicked);
 
-  // check to see if box is occupied
-  if (
-    boxClicked.hasClass("box-filled-1") == true ||
-    boxClicked.hasClass("box-filled-2") == true
-  ) {
-    isFilled = true;
-  }
-  // if not occupied
-  if (!isFilled) {
+  // // check to see if box is occupied
+  // if (
+  //   boxClicked.hasClass("box-filled-1") == true ||
+  //   boxClicked.hasClass("box-filled-2") == true
+  // ) {
+  //   isFilled = true;
+  // }
+  // // if not occupied
+  // if (!isFilled) {
     // add correct class
     boxClicked.addClass("box-filled-" + this.playerTurn);
     // remove hover class
@@ -103,7 +103,7 @@ Game.prototype.boxFill = function(boxArray, boxClicked) {
     this.board[boxIndex] = this.playerTurn;
     // check to see if the game is won 
     return (status = this.checkWinner(this.board, this.playerTurn));
-  }
+  // }
 };
 
 // 
